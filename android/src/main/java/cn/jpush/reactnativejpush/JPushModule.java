@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -47,6 +48,8 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.JPushMessage;
 import cn.jpush.android.data.JPushLocalNotification;
 import cn.jpush.android.service.JPushMessageReceiver;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class JPushModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
@@ -641,6 +644,10 @@ public class JPushModule extends ReactContextBaseJavaModule implements Lifecycle
                     intent.putExtras(mCachedBundle);
                     context.startActivity(intent);
                     mEvent = OPEN_NOTIFICATION;
+                    SharedPreferences sp = context.getSharedPreferences("setting",MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("extras",extras);
+                    editor.commit();
                     if (mRAC != null) {
                         sendEvent();
                     }
